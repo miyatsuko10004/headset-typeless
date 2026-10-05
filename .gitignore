@@ -1,7 +1,9 @@
+# Build output
 headset-typeless
-headset-event-diagnose
-headset-remote-diagnose
-.DS_Store
 .build/
 
-hfp-log-experiment
+# OS files
+.DS_Store
+
+# Note article assets
+note/

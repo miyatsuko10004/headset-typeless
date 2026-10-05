@@ -74,11 +74,6 @@ launchctl kickstart -k "gui/$(id -u)/local.headset.typeless"
 
 `./test-log-parser.sh` はログの分割受信、無関係な通知、複数通知などを7項目で検証します。実機のTypeless操作やSiriの表示は検証しません。
 
-## 診断ソース
-
-- `diagnose.swift`：システム定義イベントを監視。今回のAS660環境ではボタンを取得できませんでした。
-- `diagnose-remote.swift`：再生・停止コマンドをログ表示。キー操作は送りません。
-
 ## 参考
 
 発想のきっかけは[じゃが氏のOpenComm2 UCの記事](https://note.com/jaga_farm/n/nee6c8143459c)です。記事はLoop120のUSB HIDイベントを扱います。本ツールはBluetooth接続でメディアコマンドを受信する別の実装で、Loop120は使用しません。
