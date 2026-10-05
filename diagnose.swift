@@ -33,6 +33,6 @@ guard let tap = CGEvent.tapCreate(
 let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
 CFRunLoopAddSource(CFRunLoopGetCurrent(), source, .commonModes)
 CGEvent.tapEnable(tap: tap, enable: true)
-print("READY: listening only. Press AS660 button while Typeless is idle, then while dictating. Ctrl+C stops.")
+print("READY: listening only. Press headset button while Typeless is idle, then while dictating. Ctrl+C stops.")
 print("No output does not prove no Bluetooth signal: this tests only system-defined events visible to CGEventTap.")
 CFRunLoopRun()

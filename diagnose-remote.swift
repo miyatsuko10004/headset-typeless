@@ -21,7 +21,7 @@ for (name, command) in commands {
 }
 let info = MPNowPlayingInfoCenter.default()
 info.nowPlayingInfo = [
-    MPMediaItemPropertyTitle: "AS660 button diagnostic",
+    MPMediaItemPropertyTitle: "Headset button diagnostic",
     MPNowPlayingInfoPropertyIsLiveStream: true,
     MPNowPlayingInfoPropertyPlaybackRate: 1.0
 ]
@@ -35,6 +35,6 @@ interrupt.setEventHandler {
 }
 interrupt.resume()
 print("READY: remote-command diagnostic. No audio is played and no keys are sent.")
-print("Quit music/video apps first. Test AS660 while Typeless is idle and dictating. Ctrl+C stops.")
+print("Quit music/video apps first. Test your headset while Typeless is idle and dictating. Ctrl+C stops.")
 print("macOS may route playback buttons to this diagnostic while it runs.")
 app.run()

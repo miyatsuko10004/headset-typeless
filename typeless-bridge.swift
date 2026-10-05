@@ -44,7 +44,7 @@ for (name, command) in commands {
 }
 let info = MPNowPlayingInfoCenter.default()
 info.nowPlayingInfo = [
-    MPMediaItemPropertyTitle: "AS660 Typeless control",
+    MPMediaItemPropertyTitle: "Headset Typeless control",
     MPNowPlayingInfoPropertyIsLiveStream: true,
     MPNowPlayingInfoPropertyPlaybackRate: 1.0
 ]

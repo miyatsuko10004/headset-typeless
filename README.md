@@ -1,8 +1,10 @@
-# AS660 → Typeless (macOS)
+# Headset Typeless (macOS)
 
-AfterShokz OpenMove（AS660）のマルチファンクションボタンで、Typelessの音声入力を開始・停止する実験的なmacOS用ツールです。AS660を入力マイクに使い、Macから離れて音声入力するために作成しました。
+Bluetoothヘッドセットの再生・停止ボタンで、Typelessの音声入力を開始・停止する実験的なmacOS用ツールです。ヘッドセットのマイクとボタンを使い、Macから離れて音声入力することを目指しています。
 
-## 動作確認した設定
+機種の識別や制限は行いません。ただし、すべてのBluetoothヘッドセットに対応する保証はありません。待機中とマイク使用中の両方で、ボタンの再生・停止コマンドがmacOSの `MPRemoteCommandCenter` に届く必要があります。現在の動作確認機種はAfterShokz OpenMove（AS660）のみです。
+
+## 動作確認例：AfterShokz OpenMove（AS660）
 
 - Typelessの入力マイク：AS660
 - Typelessの音声入力ショートカット：右Shift（押すたびに開始・停止）
@@ -14,12 +16,12 @@ AfterShokz OpenMove（AS660）のマルチファンクションボタンで、Ty
 
 `MPRemoteCommandCenter`で再生・停止コマンドを受け、`CGEvent`で右Shiftの押下・解放を送ります。音声の録音・送信は行いません。音声入力はTypelessが行います。
 
-- AS660専用の信号を識別していません。他のメディアキーやコントロールセンターの操作にも反応する可能性があります。
+- 操作元のヘッドセットを識別していません。他のメディアキーやコントロールセンターの操作にも反応する可能性があります。
 - 音楽・動画アプリがコマンドの受信先になると、本ツールに届かなくなる可能性があります。
 - コントロールセンターには本ツールの再生情報が表示されます。実際の音声は再生しません。
 - Bluetooth再接続後やスリープ復帰後の継続動作は未検証です。
 - 0.4秒以内の連続コマンドは重複防止のため無視します。
-- Siriをオフにする必要があるため、同時にSiriを使う運用は確認していません。
+- AS660ではSiriをオフにして動作確認しています。他機種でSiriの無効化が必要かは個別確認が必要です。
 
 ## セットアップ
 
@@ -27,12 +29,12 @@ Swiftコンパイラ（XcodeまたはCommand Line Tools）と、インストー�
 
 ```bash
 ./build.sh
-./as660-typeless
+./headset-typeless
 ```
 
-初回は「システム設定 → プライバシーとセキュリティ → アクセシビリティ」で本実行ファイルへの許可が必要です。ターミナルからの実行と自動起動で権限の扱いが異なる場合があります。必要なら「＋」からビルドした `as660-typeless` を直接追加してください。許可後に再実行します。
+初回は「システム設定 → プライバシーとセキュリティ → アクセシビリティ」で本実行ファイルへの許可が必要です。ターミナルからの実行と自動起動で権限の扱いが異なる場合があります。必要なら「＋」からビルドした `headset-typeless` を直接追加してください。許可後に再実行します。
 
-「システム設定 → Apple IntelligenceとSiri（またはSiri）」でSiri本体をオフにし、Typelessのマイクとショートカットを上記の設定にします。`READY`が表示されたらボタンを試します。終了はControl+Cです。
+Typelessの入力マイクを使用するヘッドセットに、ショートカットを右Shiftに設定します。ボタン操作でSiriが起動する場合は「システム設定 → Apple IntelligenceとSiri（またはSiri）」でSiri本体をオフにして再確認します。`READY`が表示されたらボタンを試します。終了はControl+Cです。
 
 ## ログイン時の自動起動
 
@@ -47,15 +49,15 @@ Swiftコンパイラ（XcodeまたはCommand Line Tools）と、インストー�
 状態とログ：
 
 ```bash
-launchctl print "gui/$(id -u)/local.as660.typeless"
-tail -n 30 ~/Library/Logs/as660-typeless/stdout.log
-tail -n 30 ~/Library/Logs/as660-typeless/stderr.log
+launchctl print "gui/$(id -u)/local.headset.typeless"
+tail -n 30 ~/Library/Logs/headset-typeless/stdout.log
+tail -n 30 ~/Library/Logs/headset-typeless/stderr.log
 ```
 
 アクセシビリティの許可エラーが出る場合は実行ファイルを許可し、次のコマンドで再起動します。
 
 ```bash
-launchctl kickstart -k "gui/$(id -u)/local.as660.typeless"
+launchctl kickstart -k "gui/$(id -u)/local.headset.typeless"
 ```
 
 自動起動の解除：

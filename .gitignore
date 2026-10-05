@@ -1,5 +1,5 @@
-as660-typeless
-as660-diagnose
-as660-remote-diagnose
+headset-typeless
+headset-event-diagnose
+headset-remote-diagnose
 .DS_Store
 .build/

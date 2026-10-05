@@ -2,18 +2,18 @@
 set -euo pipefail
 project_dir="$(cd "$(dirname "$0")" && pwd)"
 "$project_dir/build.sh"
-agent_label="local.as660.typeless"
+agent_label="local.headset.typeless"
 agent_path="$HOME/Library/LaunchAgents/$agent_label.plist"
-log_dir="$HOME/Library/Logs/as660-typeless"
+log_dir="$HOME/Library/Logs/headset-typeless"
 mkdir -p "$(dirname "$agent_path")" "$log_dir"
 # plistlib escapes paths correctly, including XML special characters.
-/usr/bin/python3 - "$agent_path" "$project_dir/as660-typeless" "$log_dir" <<'PY'
+/usr/bin/python3 - "$agent_path" "$project_dir/headset-typeless" "$log_dir" <<'PY'
 import plistlib
 import sys
 path, executable, logs = sys.argv[1:]
 with open(path, 'wb') as output:
     plistlib.dump({
-        'Label': 'local.as660.typeless',
+        'Label': 'local.headset.typeless',
         'ProgramArguments': [executable],
         'RunAtLoad': True,
         'KeepAlive': True,
