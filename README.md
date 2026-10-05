@@ -85,4 +85,6 @@ launchctl kickstart -k "gui/$(id -u)/local.headset.typeless"
 
 ## ライセンス
 
-MIT License。Shokz、Typeless、Appleの公式ツールではありません。
+このプロジェクトは **[MIT License](LICENSE)** で公開しているオープンソースソフトウェアです。利用・改変・再配布・商用利用が可能です。再配布時は著作権表示とライセンス文を保持してください。ソフトウェアは無保証です。詳細はLICENSE全文を参照してください。
+
+各Swift・シェルソースにも `SPDX-License-Identifier: MIT` を記載しています。Shokz、Typeless、Appleの公式ツールではありません。

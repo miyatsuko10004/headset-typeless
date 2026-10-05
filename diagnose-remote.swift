@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Headset Typeless contributors
+
 import AppKit
 import MediaPlayer
 import Foundation

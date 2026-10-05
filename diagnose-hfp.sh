@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Headset Typeless contributors
 set -euo pipefail
 echo 'READY: observing Bluetooth HFP/voice-assistant system logs only.'
 echo 'With the headset selected as the Typeless microphone, start using right Shift,'

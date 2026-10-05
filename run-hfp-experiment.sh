@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Headset Typeless contributors
 set -euo pipefail
 project_dir="$(cd "$(dirname "$0")" && pwd)"
 agent_target="gui/$(id -u)/local.headset.typeless"
