@@ -87,7 +87,7 @@ launchctl kickstart -k "gui/$(id -u)/local.headset.typeless"
 
 ## Local Dictationとの連携
 
-更新版では `./headset-typeless --target local-dictation` で、自作Local Dictation専用の端末内通知を送れます。Local Dictationの設定で「headset-typelessから録音を開始・停止」をオンにし、入力マイクを選んで保存してください。キーボードの右Shift設定には依存せず、入力フォーカスを移しません。この対象ではbridgeのアクセシビリティ許可は不要です。Local Dictationの自動入力には従来どおり同アプリの許可が必要です。
+更新版では `./headset-typeless --target local-dictation` で、自作[Local Dictation](https://github.com/miyatsuko10004/local-dictation)専用の端末内通知を送れます。Local Dictationの設定で「headset-typelessから録音を開始・停止」をオンにし、入力マイクを選んで保存してください。キーボードの右Shift設定には依存せず、入力フォーカスを移しません。この対象ではbridgeのアクセシビリティ許可は不要です。Local Dictationの自動入力には従来どおり同アプリの許可が必要です。
 
 自動起動の切り替え: `./install-autostart.sh --target local-dictation`。Typelessへ戻す場合は `./install-autostart.sh --target typeless`。同じLaunchAgent一つを使用します。無指定の手動実行は従来のTypeless向け右Shift送信です。`--media-only` はどちらの対象でも指定可能です。`--check` は対象設定だけを表示して終了し、ボタン待機・キー送信・通知送信を行いません。
 
