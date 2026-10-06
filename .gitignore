@@ -7,3 +7,10 @@ headset-typeless
 
 # Note article assets
 note/
+
+# Local gesture investigations (kept on disk, outside supported bridge)
+RedialLogParser.swift
+enter-experiment.swift
+diagnose-front-app.swift
+diagnose-gestures.sh
+diagnose-gestures.swift

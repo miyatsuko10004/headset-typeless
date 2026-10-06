@@ -1,6 +1,6 @@
 # Headset Typeless (macOS)
 
-Bluetoothヘッドセットの再生・停止ボタンで、Typelessの音声入力を開始・停止する実験的なmacOS用ツールです。ヘッドセットのマイクとボタンを使い、Macから離れて音声入力することを目指しています。
+Bluetoothヘッドセットの再生・停止ボタンで、TypelessまたはLocal Dictationの音声入力を開始・停止する実験的なmacOS用ツールです。ヘッドセットのマイクとボタンを使い、Macから離れて音声入力することを目指しています。
 
 機種の識別や制限は行いません。ただし、すべてのBluetoothヘッドセットに対応する保証はありません。待機中とマイク使用中の両方で、ボタンの再生・停止コマンドがmacOSの `MPRemoteCommandCenter` に届く必要があります。AS660では、外部マイク使用時に再生コマンドで開始・停止を確認しました。AS660自身のマイク使用中は再生コマンドが届かず、Siri関連のシステムログに操作が記録されました。そのログを右Shiftに変換する実験版で、音声入力の停止・文字入力を確認しました（その試行ではSiriの画面は出ませんでした）。
 
@@ -15,7 +15,7 @@ Bluetoothヘッドセットの再生・停止ボタンで、Typelessの音声入
 
 ## 仕組みと制限
 
-`MPRemoteCommandCenter`で再生・停止コマンドを受け、マイク使用中の代替経路として `/usr/bin/log stream` の特定のBluetooth音声コマンド通知を監視し、`CGEvent`で右Shiftの押下・解放を送ります。音声の録音・送信は行いません。音声入力はTypelessが行います。
+`MPRemoteCommandCenter`で再生・停止コマンドを受け、マイク使用中の代替経路として `/usr/bin/log stream` の特定のBluetooth音声コマンド通知を監視し、`CGEvent`で右Shiftの押下・解放を送ります。音声の録音・送信は行いません。音声入力は選択した対象アプリが行います。
 
 - 操作元のヘッドセットを識別していません。他のメディアキーやコントロールセンターの操作にも反応する可能性があります。
 - 音楽・動画アプリがコマンドの受信先になると、本ツールに届かなくなる可能性があります。
@@ -36,7 +36,7 @@ Swiftコンパイラ（XcodeまたはCommand Line Tools）と、インストー�
 ./headset-typeless
 ```
 
-初回は「システム設定 → プライバシーとセキュリティ → アクセシビリティ」で本実行ファイルへの許可が必要です。ターミナルからの実行と自動起動で権限の扱いが異なる場合があります。必要なら「＋」からビルドした `headset-typeless` を直接追加してください。許可後に再実行します。
+Typeless向け右Shiftモードの初回は「システム設定 → プライバシーとセキュリティ → アクセシビリティ」で本実行ファイルへの許可が必要です。ターミナルからの実行と自動起動で権限の扱いが異なる場合があります。必要なら「＋」からビルドした `headset-typeless` を直接追加してください。許可後に再実行します。
 
 Typelessの入力マイクを使用するヘッドセットに、ショートカットを右Shiftに設定します。待機中と音声入力中の両方でボタン操作を確認してください。Siriが起動する、または有効化画面が出る場合は、統合版でも安定して使えるとは判断できません。`READY`が表示されたらボタンを試します。終了はControl+Cです。
 
@@ -83,3 +83,12 @@ launchctl kickstart -k "gui/$(id -u)/local.headset.typeless"
 このプロジェクトは **[MIT License](LICENSE)** で公開しているオープンソースソフトウェアです。利用・改変・再配布・商用利用が可能です。再配布時は著作権表示とライセンス文を保持してください。ソフトウェアは無保証です。詳細はLICENSE全文を参照してください。
 
 各Swift・シェルソースにも `SPDX-License-Identifier: MIT` を記載しています。Shokz、Typeless、Appleの公式ツールではありません。
+
+
+## Local Dictationとの連携
+
+更新版では `./headset-typeless --target local-dictation` で、自作Local Dictation専用の端末内通知を送れます。Local Dictationの設定で「headset-typelessから録音を開始・停止」をオンにし、入力マイクを選んで保存してください。キーボードの右Shift設定には依存せず、入力フォーカスを移しません。この対象ではbridgeのアクセシビリティ許可は不要です。Local Dictationの自動入力には従来どおり同アプリの許可が必要です。
+
+自動起動の切り替え: `./install-autostart.sh --target local-dictation`。Typelessへ戻す場合は `./install-autostart.sh --target typeless`。同じLaunchAgent一つを使用します。無指定の手動実行は従来のTypeless向け右Shift送信です。`--media-only` はどちらの対象でも指定可能です。`--check` は対象設定だけを表示して終了し、ボタン待機・キー送信・通知送信を行いません。
+
+`./test-target.sh` は対象指定・既定値・不正引数を6項目で検証します。HFPログの実験的制約とSiri表示・接続復帰の未検証範囲は専用モードにも適用されます。

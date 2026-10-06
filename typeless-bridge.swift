@@ -7,16 +7,27 @@ import Foundation
 import CoreGraphics
 
 setbuf(stdout, nil)
-let trustOptions = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-guard AXIsProcessTrustedWithOptions(trustOptions) else {
-    print("Accessibility permission required. Allow this program or Terminal in System Settings > Privacy & Security > Accessibility, then run again.")
-    exit(1)
+let options: BridgeOptions
+do { options = try BridgeOptions(arguments: Array(CommandLine.arguments.dropFirst())) }
+catch { fputs("Usage: headset-typeless [--target typeless|local-dictation] [--media-only] [--check]\n", stderr); exit(2) }
+if options.check { print("target=\(options.target.rawValue) mediaOnly=\(options.mediaOnly)"); exit(0) }
+if options.target == .typeless {
+    let trustOptions = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+    guard AXIsProcessTrustedWithOptions(trustOptions) else {
+        print("Accessibility permission required. Allow this program or Terminal in System Settings > Privacy & Security > Accessibility, then run again.")
+        exit(1)
+    }
 }
 var lastPress: TimeInterval = -.infinity
-func pressRightShift(origin: String) {
+func sendToggle(origin: String) {
     let now = ProcessInfo.processInfo.systemUptime
     guard now - lastPress >= 1 else { print("Ignored duplicate: \(origin)"); return }
     lastPress = now
+    if options.target == .localDictation {
+        DistributedNotificationCenter.default().postNotificationName(Notification.Name(BridgeOptions.toggleName), object: UUID().uuidString, userInfo: nil, deliverImmediately: true)
+        print("Sent Local Dictation toggle [\(origin)]")
+        return
+    }
     let source = CGEventSource(stateID: .privateState)
     guard let down = CGEvent(keyboardEventSource: source, virtualKey: 0x3c, keyDown: true),
           let up = CGEvent(keyboardEventSource: source, virtualKey: 0x3c, keyDown: false) else { return }
@@ -42,7 +53,7 @@ for (name, command) in commands {
     command.isEnabled = true
     command.addTarget { _ in
         print("\(Date()) RECEIVED: \(name)")
-        DispatchQueue.main.async { pressRightShift(origin: name) }
+        DispatchQueue.main.async { sendToggle(origin: name) }
         return .success
     }
 }
@@ -58,7 +69,7 @@ info.playbackState = .playing
 let reader = Process()
 let pipe = Pipe()
 var lines = HFPLogLines()
-if !CommandLine.arguments.contains("--media-only") {
+if !options.mediaOnly {
     reader.executableURL = URL(fileURLWithPath: "/usr/bin/log")
     reader.arguments = ["stream", "--level", "debug", "--style", "compact", "--predicate",
         "process == \"bluetoothd\" AND eventMessage CONTAINS \"Received End Voice Command - Deactivating Siri\""]
@@ -68,7 +79,7 @@ if !CommandLine.arguments.contains("--media-only") {
         let data = handle.availableData
         guard !data.isEmpty else { handle.readabilityHandler = nil; return }
         DispatchQueue.main.async {
-            for _ in 0..<lines.feed(data) { pressRightShift(origin: "HFP log") }
+            for _ in 0..<lines.feed(data) { sendToggle(origin: "HFP log") }
         }
     }
     reader.terminationHandler = { process in
@@ -97,6 +108,6 @@ let signals = [SIGINT, SIGTERM].map { number -> DispatchSourceSignal in
     source.resume()
     return source
 }
-print("READY: media commands + HFP log fallback send right Shift. Ctrl+C stops.")
+print("READY: target=\(options.target.rawValue), media commands\(options.mediaOnly ? "" : " + HFP log fallback"). Ctrl+C stops.")
 print("Other playback/voice-assistant controls can trigger this program; Siri is not suppressed.")
 app.run()
